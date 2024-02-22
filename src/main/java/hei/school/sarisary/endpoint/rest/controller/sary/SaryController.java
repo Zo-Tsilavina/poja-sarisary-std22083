@@ -1,11 +1,15 @@
 package hei.school.sarisary.endpoint.rest.controller.sary;
 
+import hei.school.sarisary.service.sary.SaryService;
 import java.io.*;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import hei.school.sarisary.service.sary.SaryService;
+
 @RestController
 public class SaryController {
 
@@ -21,8 +25,12 @@ public class SaryController {
     return saryService.uploadTransformedImage(id, file);
   }
 
-  @GetMapping("/blacks/{id}")
-  public String getBlackAndWhiteImage(@PathVariable String id) {
-    return id + "is blacked";
+  @GetMapping("/black-and-white/{id}")
+  public ResponseEntity<Map<String, String>> getBlackAndWhiteImage(@PathVariable String id) {
+    Map<String, String> urls = saryService.getImageUrls(id);
+    if (urls == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+    return ResponseEntity.ok(urls);
   }
 }

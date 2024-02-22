@@ -2,18 +2,20 @@ package hei.school.sarisary.service.sary;
 
 import static org.reflections.vfs.Vfs.DefaultUrlTypes.directory;
 
+import hei.school.sarisary.file.BucketComponent;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.process.ImageConverter;
 import java.io.*;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import javax.imageio.ImageIO;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import hei.school.sarisary.file.BucketComponent;
 
 @Service
 @AllArgsConstructor
@@ -53,5 +55,18 @@ public class SaryService {
     bucketComponent.upload(blackandWhiteImage, bucketKeyTransformedImage);
 
     return bucketComponent.presign(bucketKeyTransformedImage, Duration.ofMinutes(30)).toString();
+  }
+
+  public Map<String, String> getImageUrls(String id) {
+    String originalImageUrl =
+        bucketComponent.presign(directory + id + "-original", Duration.ofMinutes(30)).toString();
+    String transformedImageUrl =
+        bucketComponent.presign(directory + id + "-B&W", Duration.ofMinutes(30)).toString();
+
+    Map<String, String> urls = new HashMap<>();
+    urls.put("original_url", originalImageUrl);
+    urls.put("transformed_url", transformedImageUrl);
+
+    return urls;
   }
 }
