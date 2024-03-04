@@ -17,7 +17,7 @@ public class SaryController {
 
   @RequestMapping(
       method = RequestMethod.PUT,
-      path = "/blacks/{id}",
+      path = "/black-and-white/{id}",
       consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
   public String turnToBlackAndWhite(
       @PathVariable(name = "id") String id, @RequestPart MultipartFile file) throws IOException {
